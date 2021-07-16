@@ -2,27 +2,38 @@
   <div class="my-auto" id="skills-content">
     <h2 class="mb-5">Skills</h2>
     {{ range $.Site.Data.skills }}
-        <div class="subheading mb-3 skills-heading">{{ .grouping }}</div>
-            <ul>
-            {{ range .skills }}
-                {{ if isset . "name" }}
-                    {{ $devicon := cond (in $.Site.Data.devicons (lower .icon)) (lower .icon) (cond (in $.Site.Data.devicons (lower .name)) (lower .name) "terminal_badge") }}
-                    <li class="list-inline-item">
-                      <i class="devicons devicons-{{ $devicon }}"></i>
-                      {{if isset . "link"}}
-                          <a href="{{.link}}">{{ .name }}</a>
-                      {{ else }}
-                          {{ .name }}
-                      {{ end }}
-                    </li>
-                {{ else }}
-                  <li class="list-inline-item">
-                    <i class="devicons devicons-{{ cond (in $.Site.Data.devicons (lower .)) (lower .) "terminal_badge" }}"></i>
-                    {{ . }}
-                  </li>
-                {{ end }}
+    <div class="subheading mb-3 skills-heading">{{ .grouping }}</div>
+    <ul>
+      {{ range $skill := .skills }}
+        {{ if isset . "name" }}
+          {{ $devicon := cond (in $.Site.Data.devicons (lower .icon)) (lower .icon) (cond (in $.Site.Data.devicons (lower .name)) (lower .name) "bash-plain") }}
+          <li class="list-inline-item">
+            <i class="devicon devicon-{{ $devicon }}"></i>
+              {{if isset . "link"}}
+                <a href="{{.link}}">{{ .name }}</a>
+              {{ else }}
+                {{ .name }}
+              {{ end }}
+          </li>
+        {{ else }}
+          <li class="list-inline-item">
+          {{ $matched := false }}
+          {{ range $.Site.Data.devicon }}
+            {{ if (eq (lower .name) (lower $skill) )}}
+              {{ $fonts := .versions.font }}
+              <i class="devicon devicon-{{ .name}}-{{ index $fonts 0 }}"></i>
+              {{ $skill }}
+              {{ $matched = true }}
             {{ end }}
-            </ul>
+          {{ end }}
+          {{ if eq $matched false }}
+            <i class="devicon devicon-bash-plain"></i>
+            {{ . }}
+          {{ end }}
+        </li>
+      {{ end }}
     {{ end }}
+    </ul>
+  {{ end }}
   </div>
 </section>
