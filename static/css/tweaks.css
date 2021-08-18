@@ -12,6 +12,11 @@
   width:90%;
 }
 
+.pub-sum-link {
+  float: right;
+  font-style: italic;
+}
+
 
 h3{
     margin-top:40px;
